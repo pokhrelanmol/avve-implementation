@@ -26,6 +26,16 @@ contract LendingPool is Ownable {
     /* LIBRARY*/
     using PriceConverter for uint256;
 
+    function addLiquidity(address tokenAddress, uint256 amount)
+        external
+        isAmountZero(amount)
+        isTokenSupported(tokenAddress)
+    {
+        IERC20 token = IERC20(tokenAddress);
+        token.transferFrom(msg.sender, address(this), amount);
+        s_userToTokenToBalance[msg.sender][tokenAddress] += amount;
+    }
+
     function deposit(address tokenAddress, uint256 amount)
         external
         payable
@@ -71,7 +81,10 @@ contract LendingPool is Ownable {
         uint256 amountThatCanBeBorrowed = (s_userToCollateralInUSD[
             userAddress
         ] * LIQUIDATION_TRESHOLD) / 100;
-        // if (s_userToBorrowedAmountInUSD[userAddress] == 0) return 100e8; //if no previous borrow then health factor is 100
+        // console.log("amountThatCanBeBorrowed", amountThatCanBeBorrowed);
+
+        if (s_userToBorrowedAmountInUSD[userAddress] == 0) return 100e8; //if no previous borrow then health factor is 100
+
         return
             (amountThatCanBeBorrowed * 1e8) /
             s_userToBorrowedAmountInUSD[userAddress];
@@ -113,6 +126,14 @@ contract LendingPool is Ownable {
         address tokenAddress
     ) external view returns (uint256) {
         return s_userToTokenToBorrowedAmount[userAddress][tokenAddress];
+    }
+
+    function getUserBorrowedAmountInUSD(address userAddress)
+        external
+        view
+        returns (uint256)
+    {
+        return s_userToBorrowedAmountInUSD[userAddress];
     }
 
     modifier isTokenSupported(address tokenAddress) {
