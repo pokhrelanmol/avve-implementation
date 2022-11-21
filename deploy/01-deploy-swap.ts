@@ -1,19 +1,18 @@
+import { ethers } from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
-const deployMocks = async ({
-    deployments,
-    network,
+const deploySwap = async ({
     getNamedAccounts,
+    deployments,
 }: HardhatRuntimeEnvironment) => {
     const { deployer } = await getNamedAccounts();
     const { deploy } = deployments;
 
-    await deploy("MockV3Aggregator", {
+    await deploy("Swap", {
         from: deployer,
-        args: [18, "2000000000000000000000"],
         log: true,
     });
 };
 
-export default deployMocks;
-deployMocks.tags = ["all", "mocks"];
+export default deploySwap;
+deploySwap.tags = ["all", "swap"];

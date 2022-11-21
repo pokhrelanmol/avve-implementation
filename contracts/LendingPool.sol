@@ -4,6 +4,7 @@ import "./library/PriceConverter.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import "hardhat/console.sol";
 
 error LendingPool__TokenNotSupported();
 error LendingPool__AmountIsZero();
@@ -89,6 +90,29 @@ contract LendingPool is Ownable {
         returns (address)
     {
         return s_tokenToPriceFeedAddress[tokenAddress];
+    }
+
+    function getUserCollateralInUSD(address userAddress)
+        external
+        view
+        returns (uint256)
+    {
+        return s_userToCollateralInUSD[userAddress];
+    }
+
+    function getUserTokenToBalance(address userAddress, address tokenAddress)
+        external
+        view
+        returns (uint256)
+    {
+        return s_userToTokenToBalance[userAddress][tokenAddress];
+    }
+
+    function getUserTokenToBorrowedAmount(
+        address userAddress,
+        address tokenAddress
+    ) external view returns (uint256) {
+        return s_userToTokenToBorrowedAmount[userAddress][tokenAddress];
     }
 
     modifier isTokenSupported(address tokenAddress) {

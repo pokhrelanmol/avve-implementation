@@ -11,13 +11,15 @@ const config: HardhatUserConfig = {
             { version: "0.8.11" },
             { version: "0.6.6" },
             { version: "0.5.12" },
-            { version: "07.6" },
+            { version: "0.7.6" },
+            { version: "^0.8.0" },
         ],
     },
     networks: {
         hardhat: {
             forking: {
                 url: process.env.MAINNET_RPC_URL!,
+                blockNumber: 16006577,
             },
         },
     },

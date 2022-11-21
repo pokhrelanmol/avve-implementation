@@ -1,19 +1,18 @@
+import { ethers } from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
-const deployMocks = async ({
-    deployments,
-    network,
+const deployLendingPool = async ({
     getNamedAccounts,
+    deployments,
 }: HardhatRuntimeEnvironment) => {
     const { deployer } = await getNamedAccounts();
     const { deploy } = deployments;
 
-    await deploy("MockV3Aggregator", {
+    await deploy("LendingPool", {
         from: deployer,
-        args: [18, "2000000000000000000000"],
         log: true,
     });
 };
 
-export default deployMocks;
-deployMocks.tags = ["all", "mocks"];
+export default deployLendingPool;
+deployLendingPool.tags = ["all", "lending-pool"];
